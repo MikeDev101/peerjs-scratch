@@ -485,6 +485,21 @@
               },
             },
           },
+          {
+						opcode: "closePeerChannel",
+						blockType: Scratch.BlockType.COMMAND,
+						text: Scratch.translate("close channel [CHANNEL] with peer [ID]"),
+						arguments: {
+							ID: {
+								type: Scratch.ArgumentType.STRING,
+								defaultValue: "B",
+							},
+							CHANNEL: {
+								type: Scratch.ArgumentType.STRING,
+								defaultValue: "foobar",
+							},
+						},
+					},
         ],
         menus: {
           logMode: {
@@ -759,6 +774,14 @@
     whenPeerRings({ ID }) {
       ID = Scratch.Cast.toString(ID);
       return this.isOtherPeerConnected({ ID });
+    }
+
+    closePeerChannel({ ID, CHANNEL }) {
+      ID = Scratch.Cast.toString(ID);
+      CHANNEL = Scratch.Cast.toString(CHANNEL);
+      if (!this.isPeerConnected()) return;
+      if (!this.dataConnections.has(ID)) return;
+      this.dataConnections.get(ID).channels.get(CHANNEL).chan.close();
     }
 
     async openNewPeerChannel({ ID, CHANNEL, ORDERED }) {
